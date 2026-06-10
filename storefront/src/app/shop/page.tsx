@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import ShopClient from "@/components/ShopClient";
+import { getShopProducts } from "@/lib/catalogue";
 
 export const metadata: Metadata = {
   title: "Shop",
@@ -35,10 +36,11 @@ function ShopSkeleton() {
   );
 }
 
-export default function ShopPage() {
+export default async function ShopPage() {
+  const products = await getShopProducts();
   return (
     <Suspense fallback={<ShopSkeleton />}>
-      <ShopClient />
+      <ShopClient products={products} />
     </Suspense>
   );
 }

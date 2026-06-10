@@ -1,0 +1,70 @@
+# Architecture
+
+Terra Tunis is a **headless commerce** setup: a Medusa backend owns all commerce
+data and logic, and a Next.js storefront renders it.
+
+```
+                 ┌──────────────────────────┐
+   Browser  ───► │   storefront (Next.js 16) │  :3000
+                 │   - server components      │
+                 │   - fetches Store API      │
+                 └────────────┬───────────────┘
+                              │  HTTP  (x-publishable-api-key)
+                              ▼
+                 ┌──────────────────────────┐
+                 │   backend (Medusa v2)     │  :9000
+                 │   - Store API  /store/*    │
+                 │   - Admin API  /admin/*    │
+                 │   - Admin panel /app       │
+                 └────────────┬───────────────┘
+                              │
+                       PostgreSQL  (e-shop)
+                       (Redis on the VPS only)
+```
+
+## Responsibilities
+
+| Concern | Owner |
+|---------|-------|
+| Products, variants, prices, categories, inventory | Medusa (Postgres) |
+| Cart, orders, checkout, discounts/coupons, payments | Medusa |
+| Auth / customer accounts | Medusa (Google login planned) |
+| UI, routing, i18n (EN/SV), currency display toggle | Storefront |
+| Product imagery | Served from `storefront/public/products` via relative URLs stored in Medusa |
+
+## Catalogue data flow
+
+1. The catalogue is **seeded** into Medusa from
+   [`backend/src/scripts/seed.ts`](../backend/src/scripts/seed.ts) — 4 categories,
+   16 products, size variants, EUR + SEK prices.
+2. The storefront reads products from Medusa's **Store API** using a publishable
+   API key, in server components (Next.js 16: `fetch` runs on the server, not
+   cached by default).
+3. Product images are stored in Medusa as relative paths (`/products/<slug>.jpg`)
+   and served by the storefront's own `public/` folder — so no CDN is needed
+   locally, and on the VPS you can swap to Cloudflare/R2.
+
+## Currency & i18n
+
+- Medusa stores prices per currency (EUR default + SEK).
+- The storefront keeps its live **EN/SV** UI translation and **SEK/EUR** display
+  toggle. Product *content* (titles/descriptions) is currently English-only in
+  Medusa; bilingual product content is a later enhancement (translation module).
+
+## What's wired vs. planned
+
+| Area | Status |
+|------|--------|
+| Medusa backend on local Postgres | ✅ |
+| Catalogue seed (categories, products, variants) | ✅ |
+| Storefront reads catalogue from Medusa | 🔧 in progress (env-gated, mock fallback) |
+| Brands as a first-class entity in Medusa | ⏳ planned (custom module; mock for now) |
+| Cart/checkout via Medusa | ⏳ planned |
+| Google auth | ⏳ planned |
+| Stripe payments + coupons | ⏳ planned |
+| Multi-vendor commission (Stripe Connect) | ⏳ later |
+
+## Roadmap
+
+See [`DEPLOYMENT.md`](DEPLOYMENT.md) for the VPS plan. Build order:
+catalogue (done) → cart/checkout → Google auth → Stripe + coupons → (later) vendors.

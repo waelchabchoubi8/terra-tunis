@@ -7,8 +7,9 @@ import {
   categories,
   getBrand,
   getCategory,
-  products,
+  products as mockProducts,
   type CategoryId,
+  type Product,
 } from "@/lib/data";
 import { useSettings } from "@/lib/settings";
 import ProductCard from "./ProductCard";
@@ -17,9 +18,15 @@ import { SearchIcon, CloseIcon, ChevronDown, CategoryMotif } from "./icons";
 
 type Sort = "featured" | "priceLow" | "priceHigh" | "name";
 
-export default function ShopClient() {
+export default function ShopClient({ products }: { products?: Product[] }) {
   const { t, locale } = useSettings();
   const params = useSearchParams();
+
+  // Products come from Medusa (passed by the server page) or fall back to mock.
+  const productList = products ?? mockProducts;
+  // Brands aren't modelled in Medusa yet, so only show the brand filter when
+  // the catalogue actually carries brand ids (i.e. the mock catalogue).
+  const hasBrands = productList.some((p) => p.brandId);
 
   const initialCategory = params.get("category") as CategoryId | null;
   const initialBrand = params.get("brand");
@@ -39,7 +46,7 @@ export default function ShopClient() {
   const q = query.trim().toLowerCase();
 
   const visible = useMemo(() => {
-    let list = products.filter(
+    let list = productList.filter(
       (p) =>
         (category === "all" || p.categoryId === category) &&
         (brand === "all" || brands.find((b) => b.id === p.brandId)?.slug === brand) &&
@@ -64,7 +71,7 @@ export default function ShopClient() {
         list = [...list].sort((a, b) => Number(b.featured) - Number(a.featured));
     }
     return list;
-  }, [category, brand, sort, q, locale]);
+  }, [productList, category, brand, sort, q, locale]);
 
   const hasFilters = category !== "all" || brand !== "all" || q !== "";
   const activeBrand = brands.find((b) => b.slug === brand);
@@ -76,7 +83,7 @@ export default function ShopClient() {
         <FilterChip
           active={category === "all"}
           onClick={() => setCategory("all")}
-          count={products.length}
+          count={productList.length}
         >
           {t("shop.allCategories")}
         </FilterChip>
@@ -86,29 +93,31 @@ export default function ShopClient() {
             active={category === c.id}
             onClick={() => setCategory(c.id)}
             dot={c.accent}
-            count={products.filter((p) => p.categoryId === c.id).length}
+            count={productList.filter((p) => p.categoryId === c.id).length}
           >
             {c.name[locale]}
           </FilterChip>
         ))}
       </FilterGroup>
 
-      <FilterGroup label={t("shop.brand")}>
-        <FilterChip active={brand === "all"} onClick={() => setBrand("all")}>
-          {t("shop.allBrands")}
-        </FilterChip>
-        {brands.map((b) => (
-          <FilterChip
-            key={b.id}
-            active={brand === b.slug}
-            onClick={() => setBrand(b.slug)}
-            dot={b.accent}
-            count={products.filter((p) => p.brandId === b.id).length}
-          >
-            {b.name}
+      {hasBrands && (
+        <FilterGroup label={t("shop.brand")}>
+          <FilterChip active={brand === "all"} onClick={() => setBrand("all")}>
+            {t("shop.allBrands")}
           </FilterChip>
-        ))}
-      </FilterGroup>
+          {brands.map((b) => (
+            <FilterChip
+              key={b.id}
+              active={brand === b.slug}
+              onClick={() => setBrand(b.slug)}
+              dot={b.accent}
+              count={productList.filter((p) => p.brandId === b.id).length}
+            >
+              {b.name}
+            </FilterChip>
+          ))}
+        </FilterGroup>
+      )}
     </>
   );
 
