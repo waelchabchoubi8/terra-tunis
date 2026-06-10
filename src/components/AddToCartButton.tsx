@@ -52,7 +52,7 @@ export default function AddToCartButton({
         onClick={handleClick}
         disabled={soldOut}
         aria-label={t("common.addToCart")}
-        className={`focus-ring inline-grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-terracotta text-[#1a1206] shadow-[var(--shadow-soft)] transition-colors duration-200 hover:bg-terracotta-dark disabled:cursor-not-allowed disabled:bg-stone/40 disabled:text-stone ${className}`}
+        className={`focus-ring inline-grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-terracotta text-white shadow-[var(--shadow-soft)] transition-colors duration-200 hover:bg-terracotta-dark disabled:cursor-not-allowed disabled:bg-stone/40 disabled:text-stone ${className}`}
       >
         {added ? <CheckIcon className="h-4 w-4" /> : <PlusIcon className="h-4 w-4" />}
       </button>
@@ -64,7 +64,7 @@ export default function AddToCartButton({
       type="button"
       onClick={handleClick}
       disabled={soldOut}
-      className={`focus-ring inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full px-7 text-sm font-semibold tracking-wide text-[#1a1206] shadow-[var(--shadow-soft)] transition-colors duration-200 disabled:cursor-not-allowed disabled:bg-stone/40 disabled:text-stone ${
+      className={`focus-ring inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full px-7 text-sm font-semibold tracking-wide text-white shadow-[var(--shadow-soft)] transition-colors duration-200 disabled:cursor-not-allowed disabled:bg-stone/40 disabled:text-stone ${
         added ? "bg-olive" : "bg-terracotta hover:bg-terracotta-dark"
       } ${className}`}
     >

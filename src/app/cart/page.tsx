@@ -50,7 +50,7 @@ export default function CartPage() {
         <p className="mt-4 text-mocha">{t("cart.empty")}</p>
         <Link
           href="/shop"
-          className="focus-ring mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] transition-colors hover:bg-terracotta-dark"
+          className="focus-ring mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
         >
           {t("cart.emptyCta")} <ArrowRight className="h-4 w-4" />
         </Link>
@@ -179,7 +179,7 @@ export default function CartPage() {
 
             <Link
               href="/checkout"
-              className="focus-ring mt-6 flex h-12 items-center justify-center gap-2 rounded-full bg-terracotta text-sm font-semibold text-[#1a1206] shadow-[var(--shadow-glow)] transition-all hover:bg-terracotta-dark active:scale-[0.99]"
+              className="focus-ring mt-6 flex h-12 items-center justify-center gap-2 rounded-full bg-terracotta text-sm font-semibold text-white shadow-[var(--shadow-glow)] transition-all hover:bg-terracotta-dark active:scale-[0.99]"
             >
               {t("cart.checkout")} <ArrowRight className="h-4 w-4" />
             </Link>

@@ -2,32 +2,58 @@ import { getCategory, type CategoryId } from "@/lib/data";
 import { CategoryMotif } from "./icons";
 
 /**
- * Offline-safe "product photography" stand-in: a dark, glossy, category-tinted
- * tile with a glowing line-art motif. Intentional and premium rather than a
- * broken <img>. Swap for real photos by replacing this component.
+ * Product imagery. When `src` is given, shows a real photo (object-cover) over a
+ * category-tinted backdrop with a glossy sheen and soft vignette for depth.
+ * Without `src`, falls back to an offline-safe glossy tile with a line-art motif
+ * — so any product missing a photo still looks intentional rather than broken.
  */
 export default function ProductArt({
   category,
   label,
   className = "",
   motifClassName = "",
+  src,
 }: {
   category: CategoryId;
   label?: string;
   className?: string;
   motifClassName?: string;
+  src?: string;
 }) {
   const cat = getCategory(category)!;
   const dotId = `dots-${category}`;
+  const tint = `radial-gradient(120% 120% at 30% 15%, color-mix(in oklab, ${cat.accent} 20%, #fff) 0%, ${cat.accentSoft} 50%, color-mix(in oklab, ${cat.accentSoft} 80%, #fff) 100%)`;
+
+  // Real photo: cover the tile, keep a faint sheen + vignette for that "shot on
+  // a soft studio sweep" feel. The tint shows only while the image loads.
+  if (src) {
+    return (
+      <div className={`relative overflow-hidden ${className}`} style={{ background: tint }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={label ?? cat.name.en}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-1/3"
+          style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.22), transparent)" }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ boxShadow: "inset 0 -40px 60px -44px rgba(16,24,40,0.22)" }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
       className={`relative overflow-hidden ${className}`}
       role="img"
       aria-label={label ?? cat.name.en}
-      style={{
-        background: `radial-gradient(120% 120% at 30% 15%, color-mix(in oklab, ${cat.accent} 22%, ${cat.accentSoft}) 0%, ${cat.accentSoft} 45%, color-mix(in oklab, ${cat.accentSoft} 70%, #000) 100%)`,
-      }}
+      style={{ background: tint }}
     >
       {/* Faint dotted texture */}
       <svg className="absolute inset-0 h-full w-full opacity-40" aria-hidden="true">
@@ -43,7 +69,7 @@ export default function ProductArt({
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-1/2"
         style={{
-          background: "linear-gradient(180deg, rgba(255,255,255,0.08), transparent)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.55), transparent)",
         }}
       />
 
@@ -75,7 +101,7 @@ export default function ProductArt({
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          boxShadow: "inset 0 -50px 70px -40px rgba(0,0,0,0.7)",
+          boxShadow: "inset 0 -40px 60px -42px rgba(16,24,40,0.18)",
         }}
       />
     </div>

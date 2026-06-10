@@ -16,7 +16,7 @@ export default function NotFound() {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="focus-ring inline-flex h-12 items-center rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] shadow-[var(--shadow-glow)] transition-colors hover:bg-terracotta-dark"
+            className="focus-ring inline-flex h-12 items-center rounded-full bg-terracotta px-7 text-sm font-semibold text-white shadow-[var(--shadow-glow)] transition-colors hover:bg-terracotta-dark"
           >
             Back to home
           </Link>

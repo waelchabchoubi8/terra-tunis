@@ -21,7 +21,7 @@ export default function ContactPage() {
         <div>
           {sent ? (
             <div className="flex items-center gap-4 rounded-[var(--radius-card)] border border-olive/30 bg-olive/10 p-6">
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-olive text-[#13160a]">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-olive text-white">
                 <CheckIcon className="h-6 w-6" />
               </span>
               <p className="font-semibold text-olive">{t("contact.sent")}</p>
@@ -51,7 +51,7 @@ export default function ContactPage() {
               </div>
               <button
                 type="submit"
-                className="focus-ring inline-flex h-12 w-fit cursor-pointer items-center justify-center rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] shadow-[var(--shadow-soft)] transition-colors hover:bg-terracotta-dark sm:col-span-2"
+                className="focus-ring inline-flex h-12 w-fit cursor-pointer items-center justify-center rounded-full bg-terracotta px-7 text-sm font-semibold text-white shadow-[var(--shadow-soft)] transition-colors hover:bg-terracotta-dark sm:col-span-2"
               >
                 {t("contact.send")}
               </button>
@@ -74,7 +74,7 @@ export default function ContactPage() {
           </div>
           <div
             className="relative h-44 overflow-hidden rounded-[var(--radius-card)] border border-clay/60"
-            style={{ background: "radial-gradient(120% 120% at 20% 10%, #2a2e1c 0%, #16161b 70%)" }}
+            style={{ background: "radial-gradient(120% 120% at 20% 10%, #eef2df 0%, #f3f5f8 70%)" }}
             role="img"
             aria-label="Tunisia to Sweden route"
           >

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { productsByBrand, type Brand } from "@/lib/data";
+import { brandCover, productsByBrand, type Brand } from "@/lib/data";
 import { useSettings } from "@/lib/settings";
 import ProductCard from "./ProductCard";
 import SectionHeading from "./SectionHeading";
@@ -21,6 +21,7 @@ export default function BrandStorefront({ brand }: { brand: Brand }) {
 
   // pick a motif from the brand's first product's category
   const motif = items[0]?.categoryId ?? "olive-oil";
+  const cover = brandCover(brand);
 
   return (
     <div>
@@ -31,18 +32,40 @@ export default function BrandStorefront({ brand }: { brand: Brand }) {
           background: `linear-gradient(135deg, ${brand.accentSoft} 0%, color-mix(in oklab, ${brand.accent} 30%, var(--color-cream)) 100%)`,
         }}
       >
-        <span
-          className="pointer-events-none absolute -right-6 -top-10 select-none font-display text-[16rem] font-semibold leading-none"
-          style={{ color: brand.accent, opacity: 0.16 }}
-          aria-hidden="true"
-        >
-          {monogram}
-        </span>
-        <CategoryMotif
-          category={motif}
-          className="absolute -bottom-10 right-[18%] hidden h-56 w-56 lg:block"
-          style={{ color: brand.accent, opacity: 0.2 }}
-        />
+        {cover ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={cover}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {/* Left-weighted light scrim keeps the dark hero text readable */}
+            <span
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(100deg, var(--color-cream) 18%, rgba(255,255,255,0.80) 50%, rgba(255,255,255,0.32) 100%)",
+              }}
+              aria-hidden="true"
+            />
+          </>
+        ) : (
+          <>
+            <span
+              className="pointer-events-none absolute -right-6 -top-10 select-none font-display text-[16rem] font-semibold leading-none"
+              style={{ color: brand.accent, opacity: 0.16 }}
+              aria-hidden="true"
+            >
+              {monogram}
+            </span>
+            <CategoryMotif
+              category={motif}
+              className="absolute -bottom-10 right-[18%] hidden h-56 w-56 lg:block"
+              style={{ color: brand.accent, opacity: 0.2 }}
+            />
+          </>
+        )}
 
         <div className="container-pad relative py-14 sm:py-20">
           <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-1.5 text-sm text-mocha">

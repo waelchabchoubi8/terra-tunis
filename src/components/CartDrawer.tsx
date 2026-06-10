@@ -91,7 +91,7 @@ export default function CartDrawer() {
             <Link
               href="/shop"
               onClick={closeCart}
-              className="focus-ring mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-terracotta px-6 text-sm font-semibold text-[#1a1206] transition-colors hover:bg-terracotta-dark"
+              className="focus-ring mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-terracotta px-6 text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
             >
               {t("cart.emptyCta")} <ArrowRight className="h-4 w-4" />
             </Link>
@@ -216,7 +216,7 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={closeCart}
-                  className="focus-ring inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-terracotta text-sm font-semibold text-[#1a1206] transition-colors hover:bg-terracotta-dark"
+                  className="focus-ring inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-terracotta text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
                 >
                   {t("drawer.checkout")} <ArrowRight className="h-4 w-4" />
                 </Link>

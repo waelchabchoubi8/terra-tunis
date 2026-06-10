@@ -1,54 +1,59 @@
 @import "tailwindcss";
 
 /*
-  Terra Tunis — Design System v2 (Dark / Premium / Liquid Glass)
-  Style: Sleek modern dark. Charcoal surfaces, gold accent, glass panels,
-  glossy cards, slow aurora light and grain for a tactile premium feel.
+  Terra Tunis — Design System v3 (Light / Flag-driven)
+  Style: Clean, bright marketplace on a white background. The palette is drawn
+  from the Swedish and Tunisian flags — Tunisian red is the primary accent,
+  Swedish blue the secondary, and Swedish yellow the highlight.
   Type: Outfit (geometric display) + Inter (body).
-  NOTE: token names are kept from the original light theme but remapped to
-  dark values, so `bg-cream` = app background, `text-espresso` = primary text, etc.
+  NOTE: token names are kept from earlier themes, so `bg-cream` = app background
+  (now white), `text-espresso` = primary text (now near-black), etc.
+
+  Flag reference:
+    Tunisia  — red    #e70013, white  #ffffff
+    Sweden   — blue   #006aa7, yellow #fecc02
 */
 
 @theme {
-  /* Surfaces (dark) */
-  --color-cream: #0e0e11; /* app background */
-  --color-sand: #16161b; /* subtle elevated surface */
-  --color-clay: #2a2a33; /* borders / dividers */
-  --color-parchment: #17171c; /* card surface */
+  /* Surfaces (light) */
+  --color-cream: #ffffff; /* app background */
+  --color-sand: #f3f5f8; /* subtle elevated / tinted surface */
+  --color-clay: #e3e6ec; /* borders / dividers */
+  --color-parchment: #ffffff; /* card surface */
 
-  /* Accents */
-  --color-terracotta: #cca24f; /* PRIMARY accent = gold */
-  --color-terracotta-dark: #e2c074; /* hover = brighter gold */
-  --color-olive: #a3b466;
-  --color-olive-dark: #8b9c52;
-  --color-tunis: #d65f4b; /* warm coral-red */
-  --color-tunis-dark: #b6432f;
-  --color-gold: #d4af6a;
-  --color-gold-soft: #ecd6a6;
+  /* Accents (flag palette) */
+  --color-terracotta: #e70013; /* PRIMARY accent = Tunisian red */
+  --color-terracotta-dark: #c30011; /* hover = deeper red */
+  --color-olive: #006aa7; /* Swedish blue (success / progress) */
+  --color-olive-dark: #00558a;
+  --color-tunis: #e70013; /* Tunisian red (alerts / out-of-stock) */
+  --color-tunis-dark: #c30011;
+  --color-gold: #f4c20d; /* Swedish yellow (highlight / fills) */
+  --color-gold-soft: #9a6b00; /* readable amber for text on white */
 
-  /* Ink (light on dark) */
-  --color-espresso: #f3f0e8; /* primary text */
-  --color-mocha: #aca69b; /* muted text */
-  --color-stone: #7e7870; /* faint text */
+  /* Ink (dark on white) */
+  --color-espresso: #16181d; /* primary text */
+  --color-mocha: #50555f; /* muted text */
+  --color-stone: #8b909b; /* faint text */
 
   /* Fonts (wired to next/font CSS variables in layout) */
   --font-display: var(--font-outfit), system-ui, sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
-  /* Radii & shadows */
+  /* Radii & shadows (soft, light) */
   --radius-card: 16px;
-  --shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 10px 30px -14px rgba(0, 0, 0, 0.85);
-  --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 28px 64px -22px rgba(0, 0, 0, 0.95);
-  --shadow-glow: 0 0 0 1px rgba(204, 162, 79, 0.35),
-    0 18px 50px -18px rgba(204, 162, 79, 0.35);
+  --shadow-soft: 0 1px 2px rgba(16, 24, 40, 0.04),
+    0 12px 28px -16px rgba(16, 24, 40, 0.20);
+  --shadow-lift: 0 1px 2px rgba(16, 24, 40, 0.05),
+    0 30px 64px -28px rgba(16, 24, 40, 0.25);
+  --shadow-glow: 0 0 0 1px rgba(231, 0, 19, 0.20),
+    0 18px 44px -20px rgba(231, 0, 19, 0.30);
 }
 
 :root {
   --background: var(--color-cream);
   --foreground: var(--color-espresso);
-  color-scheme: dark;
+  color-scheme: light;
   /* z-index scale: 10 floating chips · 20 sticky asides · 40 header · 50 overlays */
 }
 
@@ -61,9 +66,11 @@ html {
 }
 
 body {
+  /* Subtle flag-tinted light wash on white: blue top, red corner, yellow edge */
   background:
-    radial-gradient(65% 55% at 50% -12%, rgba(204, 162, 79, 0.12), transparent 70%),
-    radial-gradient(45% 45% at 92% 6%, rgba(214, 95, 75, 0.07), transparent 70%),
+    radial-gradient(60% 50% at 50% -10%, rgba(0, 106, 167, 0.06), transparent 70%),
+    radial-gradient(45% 45% at 92% 4%, rgba(231, 0, 19, 0.05), transparent 70%),
+    radial-gradient(40% 40% at 6% 8%, rgba(244, 194, 13, 0.06), transparent 70%),
     var(--color-cream);
   background-attachment: fixed;
   color: var(--foreground);
@@ -72,38 +79,27 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Film grain over everything — keeps large dark surfaces from banding */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 ::selection {
-  background: rgba(204, 162, 79, 0.3);
+  background: rgba(231, 0, 19, 0.16);
   color: var(--color-espresso);
 }
 
-/* Thin, dark, gold-tinted scrollbar */
+/* Thin, light, red-tinted scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #34343e transparent;
+  scrollbar-color: #c5cad4 transparent;
 }
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2c2c35;
+  background: #c5cad4;
   border-radius: 999px;
   border: 2px solid var(--color-cream);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(204, 162, 79, 0.45);
+  background: rgba(231, 0, 19, 0.45);
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -158,23 +154,23 @@ h1, h2, h3, h4 {
   border-radius: 6px;
 }
 
-/* Glossy card sheen — subtle gradient overlay for elevated surfaces */
+/* Glossy card sheen — faint blue top highlight for elevated surfaces */
 .glossy {
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 40%);
+  background-image: linear-gradient(180deg, rgba(0, 106, 167, 0.04), transparent 42%);
 }
 
-/* Liquid-glass panel — drawers, palettes, floating chips */
+/* Liquid-glass panel — drawers, palettes, floating chips (light) */
 .glass {
-  background: rgba(20, 20, 25, 0.78);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 60px -24px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 24px 60px -24px rgba(16, 24, 40, 0.25);
 }
 
-/* Gold gradient ink for display accents */
+/* Flag gradient ink for display accents — Tunisian red into Swedish blue */
 .text-gradient-gold {
-  background: linear-gradient(100deg, #ecd6a6 0%, #cca24f 45%, #e2c074 90%);
+  background: linear-gradient(105deg, #e70013 0%, #e70013 46%, #006aa7 56%, #006aa7 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -274,7 +270,7 @@ h1, h2, h3, h4 {
   to { background-position: -200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, #1a1a20 25%, #232330 50%, #1a1a20 75%);
+  background: linear-gradient(90deg, #eef0f3 25%, #f7f8fa 50%, #eef0f3 75%);
   background-size: 200% 100%;
   animation: shimmer 1.6s linear infinite;
   border-radius: var(--radius-card);
@@ -342,7 +338,7 @@ h1, h2, h3, h4 {
 /* Styled <select> with custom gold chevron */
 .select-fancy {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cca24f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e70013' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   padding-right: 2.4rem;
@@ -358,7 +354,7 @@ h1, h2, h3, h4 {
 .divider-ornate {
   position: relative;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(204, 162, 79, 0.4), transparent);
+  background: linear-gradient(to right, transparent, rgba(231, 0, 19, 0.35), transparent);
 }
 .divider-ornate::after {
   content: "";
@@ -369,10 +365,10 @@ h1, h2, h3, h4 {
   height: 7px;
   transform: translate(-50%, -50%) rotate(45deg);
   background: var(--color-terracotta);
-  box-shadow: 0 0 12px rgba(204, 162, 79, 0.8);
+  box-shadow: 0 0 10px rgba(231, 0, 19, 0.5);
 }
 
-/* Native form controls adopt dark scheme */
+/* Native form controls adopt light scheme */
 input, textarea, select {
-  color-scheme: dark;
+  color-scheme: light;
 }

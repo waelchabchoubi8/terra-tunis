@@ -30,7 +30,7 @@ function Segmented<T extends string>({
             onClick={() => onChange(opt.value)}
             className={`focus-ring cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-colors duration-200 ${
               active
-                ? "bg-terracotta text-[#1a1206]"
+                ? "bg-terracotta text-white"
                 : "text-mocha hover:text-espresso"
             }`}
           >

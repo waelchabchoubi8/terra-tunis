@@ -11,6 +11,7 @@ import SettingsSwitcher from "./SettingsSwitcher";
 import CartDrawer from "./CartDrawer";
 import SearchPalette from "./SearchPalette";
 import { CartIcon, MenuIcon, CloseIcon, ShipIcon, SearchIcon } from "./icons";
+import FlagPair from "./Flags";
 
 export default function Header() {
   const t = useT();
@@ -52,18 +53,22 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40">
-      {/* Announcement bar */}
-      <div className="bg-[#08080a] text-mocha">
-        <div className="container-pad flex h-9 items-center justify-center gap-2 text-center text-xs font-medium tracking-wide">
-          <ShipIcon className="h-4 w-4 text-terracotta" />
-          {t("common.freeShipping")}
+      {/* Announcement bar — flag pair + free shipping */}
+      <div className="border-b border-clay/70 bg-sand text-mocha">
+        <div className="container-pad flex h-9 items-center justify-center gap-3 text-center text-xs font-medium tracking-wide">
+          <FlagPair />
+          <span className="hidden h-3 w-px bg-clay sm:block" />
+          <span className="inline-flex items-center gap-1.5">
+            <ShipIcon className="h-4 w-4 text-terracotta" />
+            {t("common.freeShipping")}
+          </span>
         </div>
       </div>
 
       <div
         className={`border-b transition-all duration-300 ${
           scrolled
-            ? "border-clay/80 bg-[#0e0e11]/80 shadow-[0_18px_40px_-22px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+            ? "border-clay/80 bg-cream/85 shadow-[0_18px_40px_-22px_rgba(16,24,40,0.25)] backdrop-blur-xl"
             : "border-clay/60 bg-cream/70 backdrop-blur-md"
         }`}
       >
@@ -127,7 +132,7 @@ export default function Header() {
               {ready && count > 0 && (
                 <span
                   key={count}
-                  className="animate-badge-pop absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-terracotta px-1 text-[0.65rem] font-bold text-[#1a1206]"
+                  className="animate-badge-pop absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-terracotta px-1 text-[0.65rem] font-bold text-white"
                 >
                   {count}
                 </span>

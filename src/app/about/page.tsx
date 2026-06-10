@@ -29,7 +29,7 @@ export default function AboutPage() {
       <section className="relative overflow-hidden border-b border-clay/60">
         <div
           className="absolute inset-0 -z-10"
-          style={{ background: "radial-gradient(80% 110% at 80% -10%, rgba(204,162,79,0.16) 0%, transparent 55%)" }}
+          style={{ background: "radial-gradient(80% 110% at 80% -10%, rgba(0,106,167,0.10) 0%, transparent 55%)" }}
         />
         <CategoryMotif category="olive-oil" className="absolute -left-10 bottom-0 hidden h-64 w-64 md:block" style={{ color: "var(--color-olive)", opacity: 0.16 }} />
         <div className="container-pad py-16 sm:py-24">
@@ -70,7 +70,7 @@ export default function AboutPage() {
             {steps.map((s, i) => (
               <Reveal key={i} delay={i * 100}>
                 <div className="hover-lift flex gap-4 rounded-[var(--radius-card)] border border-clay/60 bg-parchment p-5">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-terracotta font-display text-lg font-semibold text-[#1a1206]">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-terracotta font-display text-lg font-semibold text-white">
                     {i + 1}
                   </span>
                   <div>
@@ -114,7 +114,7 @@ export default function AboutPage() {
         </h2>
         <Link
           href="/brands"
-          className="focus-ring mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] transition-colors hover:bg-terracotta-dark"
+          className="focus-ring mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
         >
           {t("home.hero.ctaSecondary")} <ArrowRight className="h-4 w-4" />
         </Link>

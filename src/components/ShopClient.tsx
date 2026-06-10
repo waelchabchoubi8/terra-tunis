@@ -236,7 +236,7 @@ export default function ShopClient() {
                   setBrand("all");
                   setQuery("");
                 }}
-                className="focus-ring mt-5 inline-flex h-11 cursor-pointer items-center rounded-full bg-terracotta px-6 text-sm font-semibold text-[#1a1206] transition-colors hover:bg-terracotta-dark"
+                className="focus-ring mt-5 inline-flex h-11 cursor-pointer items-center rounded-full bg-terracotta px-6 text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
               >
                 {t("shop.clear")}
               </button>
@@ -293,7 +293,7 @@ function FilterChip({
       aria-pressed={active}
       className={`focus-ring inline-flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors duration-200 lg:w-full lg:rounded-lg ${
         active
-          ? "bg-terracotta text-[#1a1206]"
+          ? "bg-terracotta text-white"
           : "border border-clay bg-parchment text-mocha hover:border-terracotta/40 hover:text-espresso lg:border-transparent lg:bg-transparent lg:hover:bg-sand"
       }`}
     >
@@ -308,7 +308,7 @@ function FilterChip({
       {count != null && (
         <span
           className={`rounded-full px-1.5 text-[0.65rem] font-bold tabular-nums ${
-            active ? "bg-[#1a1206]/15 text-[#1a1206]" : "bg-clay/50 text-stone"
+            active ? "bg-white/25 text-white" : "bg-clay/60 text-mocha"
           }`}
         >
           {count}

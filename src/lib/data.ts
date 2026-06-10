@@ -54,7 +54,7 @@ export const categories: Category[] = [
       sv: "Kallpressade oljor från uråldriga olivlundar.",
     },
     accent: "#a7b86a",
-    accentSoft: "#1c2016",
+    accentSoft: "#eef2df",
   },
   {
     id: "honey",
@@ -65,7 +65,7 @@ export const categories: Category[] = [
       sv: "Rå, ofiltrerad honung från berg och kust.",
     },
     accent: "#e2b65a",
-    accentSoft: "#221c10",
+    accentSoft: "#fbf1d8",
   },
   {
     id: "spices",
@@ -76,7 +76,7 @@ export const categories: Category[] = [
       sv: "Handmalen harissa, tabil och traditionella blandningar.",
     },
     accent: "#d8694f",
-    accentSoft: "#231411",
+    accentSoft: "#fce7e1",
   },
   {
     id: "pastries",
@@ -87,7 +87,7 @@ export const categories: Category[] = [
       sv: "Sötsaker av dadlar, mandel och sesam, gjorda på gammalt vis.",
     },
     accent: "#d89a63",
-    accentSoft: "#221913",
+    accentSoft: "#f8ece0",
   },
 ];
 
@@ -113,7 +113,7 @@ export const brands: Brand[] = [
       },
     ],
     accent: "#a7b86a",
-    accentSoft: "#1c2016",
+    accentSoft: "#eef2df",
   },
   {
     id: "kroumirie",
@@ -136,7 +136,7 @@ export const brands: Brand[] = [
       },
     ],
     accent: "#e2b65a",
-    accentSoft: "#221c10",
+    accentSoft: "#fbf1d8",
   },
   {
     id: "dar-toumi",
@@ -159,7 +159,7 @@ export const brands: Brand[] = [
       },
     ],
     accent: "#d8694f",
-    accentSoft: "#231411",
+    accentSoft: "#fce7e1",
   },
   {
     id: "maison-zituna",
@@ -182,7 +182,7 @@ export const brands: Brand[] = [
       },
     ],
     accent: "#d89a63",
-    accentSoft: "#221913",
+    accentSoft: "#f8ece0",
   },
   {
     id: "cap-bon",
@@ -205,7 +205,7 @@ export const brands: Brand[] = [
       },
     ],
     accent: "#c2b25a",
-    accentSoft: "#201e11",
+    accentSoft: "#f4f1db",
   },
 ];
 
@@ -474,6 +474,52 @@ export const products: Product[] = [
     featured: true,
   },
 ];
+
+// ---- Product photography ----
+// Slugs that have a real photo in /public/products/<slug>.jpg. Anything not
+// listed falls back to the generated ProductArt tile, so adding a product
+// without a photo still looks intentional. To add real photos: drop
+// <slug>.jpg into public/products and add the slug here.
+const PRODUCT_IMAGES = new Set<string>([
+  "chetoui-extra-virgin-500ml",
+  "chemlali-evoo-1l",
+  "early-harvest-evoo-250ml",
+  "organic-evoo-tin-750ml",
+  "rosemary-honey-400g",
+  "eucalyptus-honey-400g",
+  "wild-thyme-honey-250g",
+  "bee-pollen-120g",
+  "traditional-harissa-200g",
+  "tabil-spice-blend-100g",
+  "ras-el-hanout-80g",
+  "rose-harissa-180g",
+  "makroudh-date-pastries",
+  "baklawa-assortment",
+  "kaak-warka-almond-rings",
+  "ghraiba-sesame-shortbread",
+]);
+
+/** Public path to a product's photo, or undefined if it has none. */
+export function productImage(product: Product): string | undefined {
+  return PRODUCT_IMAGES.has(product.slug)
+    ? `/products/${product.slug}.jpg`
+    : undefined;
+}
+
+// Brand storefront cover scenes in /public/brands/<slug>.jpg (olive grove,
+// apiary, spice souk, …). Missing slugs fall back to the accent gradient.
+const BRAND_COVERS = new Set<string>([
+  "domaine-el-founti",
+  "ruchers-de-kroumirie",
+  "dar-toumi",
+  "maison-zituna",
+  "cap-bon-gourmet",
+]);
+
+/** Public path to a brand's cover scene, or undefined if it has none. */
+export function brandCover(brand: Brand): string | undefined {
+  return BRAND_COVERS.has(brand.slug) ? `/brands/${brand.slug}.jpg` : undefined;
+}
 
 // ---- Lookups & helpers ----
 

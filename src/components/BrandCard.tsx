@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { productsByBrand, type Brand } from "@/lib/data";
+import { brandCover, productsByBrand, type Brand } from "@/lib/data";
 import { useSettings } from "@/lib/settings";
 import { ArrowRight, MapPinIcon } from "./icons";
 
 export default function BrandCard({ brand }: { brand: Brand }) {
   const { locale, t } = useSettings();
   const count = productsByBrand(brand.id).length;
+  const cover = brandCover(brand);
   const monogram = brand.name
     .split(" ")
     .filter((w) => !["de", "les", "el"].includes(w.toLowerCase()))
@@ -26,13 +27,30 @@ export default function BrandCard({ brand }: { brand: Brand }) {
           background: `linear-gradient(135deg, ${brand.accentSoft} 0%, color-mix(in oklab, ${brand.accent} 35%, var(--color-parchment)) 100%)`,
         }}
       >
-        <span
-          className="absolute -right-2 -top-4 select-none font-display text-[7rem] font-semibold leading-none transition-transform duration-500 group-hover:scale-105"
-          style={{ color: brand.accent, opacity: 0.22 }}
-          aria-hidden="true"
-        >
-          {monogram}
-        </span>
+        {cover ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={cover}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <span
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg, rgba(16,24,40,0.05), rgba(16,24,40,0.35))" }}
+              aria-hidden="true"
+            />
+          </>
+        ) : (
+          <span
+            className="absolute -right-2 -top-4 select-none font-display text-[7rem] font-semibold leading-none transition-transform duration-500 group-hover:scale-105"
+            style={{ color: brand.accent, opacity: 0.22 }}
+            aria-hidden="true"
+          >
+            {monogram}
+          </span>
+        )}
         <span
           className="absolute bottom-3 left-4 inline-flex items-center gap-1.5 rounded-full bg-parchment/80 px-2.5 py-1 text-xs font-semibold text-mocha backdrop-blur"
         >

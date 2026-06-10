@@ -70,7 +70,7 @@ export default function HomePage() {
           className="absolute inset-0 -z-10"
           style={{
             background:
-              "radial-gradient(75% 90% at 82% -10%, rgba(204,162,79,0.2) 0%, transparent 58%), radial-gradient(60% 80% at 10% 110%, rgba(214,95,75,0.09) 0%, transparent 60%), radial-gradient(40% 50% at 30% 20%, rgba(163,180,102,0.05) 0%, transparent 70%)",
+              "radial-gradient(75% 90% at 82% -10%, rgba(231,0,19,0.10) 0%, transparent 58%), radial-gradient(60% 80% at 10% 110%, rgba(0,106,167,0.08) 0%, transparent 60%), radial-gradient(40% 50% at 30% 20%, rgba(244,194,13,0.06) 0%, transparent 70%)",
           }}
         />
         {/* decorative motifs */}
@@ -100,7 +100,7 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/shop"
-                className="focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] shadow-[var(--shadow-glow)] transition-all duration-200 hover:bg-terracotta-dark active:scale-[0.98]"
+                className="focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-white shadow-[var(--shadow-glow)] transition-all duration-200 hover:bg-terracotta-dark active:scale-[0.98]"
               >
                 {t("home.hero.ctaPrimary")}
                 <ArrowRight className="h-4 w-4" />
@@ -144,13 +144,13 @@ export default function HomePage() {
                 className="glossy sheen relative col-span-2 flex h-44 items-end overflow-hidden rounded-[var(--radius-card)] border border-clay/70 p-6 shadow-[var(--shadow-lift)]"
                 style={{
                   background:
-                    "radial-gradient(120% 140% at 85% 0%, #3a4226 0%, #1c2016 55%, #14140f 100%)",
+                    "radial-gradient(120% 140% at 85% 0%, #e3ead0 0%, #eef2df 55%, #f6f8ef 100%)",
                 }}
               >
                 <CategoryMotif
                   category="olive-oil"
                   className="animate-float absolute -right-4 -top-6 h-44 w-44 opacity-50"
-                  style={{ color: "#c9d39a" }}
+                  style={{ color: "#6f8a2e" }}
                 />
                 <div className="relative text-espresso">
                   <p className="eyebrow text-gold-soft">{categories[0].name[locale]}</p>
@@ -191,7 +191,7 @@ export default function HomePage() {
         </div>
 
         {/* ---------- Makers marquee ---------- */}
-        <div className="border-y border-clay/60 bg-[#0b0b0e]/60 py-4">
+        <div className="border-y border-clay/60 bg-sand/60 py-4">
           <div className="marquee" aria-label={t("home.makers.label")}>
             <div className="marquee-track">
               {[0, 1].map((copy) => (
@@ -354,7 +354,7 @@ export default function HomePage() {
             className="glossy relative overflow-hidden rounded-[var(--radius-card)] border border-terracotta/25 px-6 py-12 sm:px-12 sm:py-16"
             style={{
               background:
-                "radial-gradient(90% 130% at 85% -20%, rgba(204,162,79,0.22) 0%, transparent 55%), linear-gradient(120deg, #15140f 0%, #19181c 100%)",
+                "radial-gradient(90% 130% at 85% -20%, rgba(0,106,167,0.10) 0%, transparent 55%), linear-gradient(120deg, #ffffff 0%, #f3f5f8 100%)",
             }}
           >
             <CategoryMotif
@@ -383,7 +383,7 @@ export default function HomePage() {
                 />
                 <button
                   type="submit"
-                  className="focus-ring inline-flex h-12 cursor-pointer items-center justify-center rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] transition-all hover:bg-terracotta-dark active:scale-[0.98]"
+                  className="focus-ring inline-flex h-12 cursor-pointer items-center justify-center rounded-full bg-terracotta px-7 text-sm font-semibold text-white transition-all hover:bg-terracotta-dark active:scale-[0.98]"
                 >
                   {t("home.newsletter.cta")}
                 </button>

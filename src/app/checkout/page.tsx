@@ -32,14 +32,14 @@ export default function CheckoutPage() {
   if (placed) {
     return (
       <div className="container-pad py-24 text-center">
-        <span className="animate-badge-pop mx-auto grid h-16 w-16 place-items-center rounded-full bg-olive text-[#1a1206]">
+        <span className="animate-badge-pop mx-auto grid h-16 w-16 place-items-center rounded-full bg-olive text-white">
           <CheckIcon className="h-8 w-8" />
         </span>
         <h1 className="mt-6 font-display text-4xl">{t("checkout.success.title")}</h1>
         <p className="mx-auto mt-4 max-w-md text-mocha">{t("checkout.success.body")}</p>
         <Link
           href="/shop"
-          className="focus-ring mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] transition-colors hover:bg-terracotta-dark"
+          className="focus-ring mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
         >
           {t("checkout.success.cta")} <ArrowRight className="h-4 w-4" />
         </Link>
@@ -54,7 +54,7 @@ export default function CheckoutPage() {
         <p className="mt-4 text-mocha">{t("cart.empty")}</p>
         <Link
           href="/shop"
-          className="focus-ring mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-[#1a1206] transition-colors hover:bg-terracotta-dark"
+          className="focus-ring mt-8 inline-flex h-12 items-center gap-2 rounded-full bg-terracotta px-7 text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
         >
           {t("cart.emptyCta")} <ArrowRight className="h-4 w-4" />
         </Link>
@@ -166,7 +166,7 @@ export default function CheckoutPage() {
                     </span>
                     <span
                       className={`grid h-5 w-5 place-items-center rounded-full border transition-colors ${
-                        active ? "border-terracotta bg-terracotta text-[#1a1206]" : "border-clay"
+                        active ? "border-terracotta bg-terracotta text-white" : "border-clay"
                       }`}
                     >
                       {active && <CheckIcon className="h-3 w-3" />}
@@ -223,7 +223,7 @@ export default function CheckoutPage() {
 
             <button
               type="submit"
-              className="focus-ring mt-6 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-terracotta text-sm font-semibold text-[#1a1206] shadow-[var(--shadow-glow)] transition-all hover:bg-terracotta-dark active:scale-[0.99]"
+              className="focus-ring mt-6 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-terracotta text-sm font-semibold text-white shadow-[var(--shadow-glow)] transition-all hover:bg-terracotta-dark active:scale-[0.99]"
             >
               {t("checkout.placeOrder")}
             </button>
@@ -256,7 +256,7 @@ export default function CheckoutPage() {
 
 function StepBadge({ n }: { n: number }) {
   return (
-    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-terracotta font-display text-base font-semibold text-[#1a1206]">
+    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-terracotta font-display text-base font-semibold text-white">
       {n}
     </span>
   );

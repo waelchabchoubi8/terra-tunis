@@ -90,7 +90,7 @@ export default function Footer() {
               <span className="h-2.5 w-3.5 rounded-[2px] bg-tunis" /> Tunisia
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="h-2.5 w-3.5 rounded-[2px] bg-[#005bbb]" /> Sverige
+              <span className="h-2.5 w-3.5 rounded-[2px] bg-olive" /> Sverige
             </span>
           </div>
         </div>

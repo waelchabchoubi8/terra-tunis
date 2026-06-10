@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { getBrand, getCategory, ratingFor, type Product } from "@/lib/data";
+import { getBrand, getCategory, productImage, ratingFor, type Product } from "@/lib/data";
 import { useSettings } from "@/lib/settings";
 import ProductArt from "./ProductArt";
 import Price from "./Price";
@@ -24,15 +24,16 @@ export default function ProductCard({ product }: { product: Product }) {
         <ProductArt
           category={product.categoryId}
           label={product.name[locale]}
+          src={productImage(product)}
           className="aspect-[4/5] w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]"
         />
         {product.stock === "out" && (
-          <span className="absolute left-3 top-3 rounded-full bg-[#0a0a0d]/85 px-3 py-1 text-xs font-semibold text-espresso backdrop-blur">
+          <span className="absolute left-3 top-3 rounded-full border border-clay/70 bg-cream/90 px-3 py-1 text-xs font-semibold text-espresso backdrop-blur">
             {locale === "sv" ? "Slutsåld" : "Sold out"}
           </span>
         )}
         {product.stock === "low" && (
-          <span className="absolute left-3 top-3 rounded-full bg-[#0a0a0d]/85 px-3 py-1 text-xs font-semibold text-gold-soft backdrop-blur">
+          <span className="absolute left-3 top-3 rounded-full border border-clay/70 bg-cream/90 px-3 py-1 text-xs font-semibold text-gold-soft backdrop-blur">
             {locale === "sv" ? "Få kvar" : "Low stock"}
           </span>
         )}

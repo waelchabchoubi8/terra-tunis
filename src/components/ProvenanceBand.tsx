@@ -103,7 +103,7 @@ export function ProvenanceChip({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full bg-[#0a0a0d]/80 px-2.5 py-1 text-[0.65rem] font-semibold text-espresso backdrop-blur ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border border-clay/70 bg-cream/90 px-2.5 py-1 text-[0.65rem] font-semibold text-espresso backdrop-blur ${className}`}
     >
       <MapPinIcon className="h-3 w-3 text-terracotta" />
       <span className="max-w-[7rem] truncate">{origin}</span>

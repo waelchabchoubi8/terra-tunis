@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   getBrand,
   getCategory,
+  productImage,
   ratingFor,
   relatedProducts,
   type Product,
@@ -38,6 +39,7 @@ export default function ProductDetail({ product }: { product: Product }) {
   const category = getCategory(product.categoryId);
   const related = relatedProducts(product, 4);
   const rating = ratingFor(product);
+  const image = productImage(product);
   const [qty, setQty] = useState(1);
   const [view, setView] = useState(0);
 
@@ -64,6 +66,7 @@ export default function ProductDetail({ product }: { product: Product }) {
               key={view}
               category={product.categoryId}
               label={product.name[locale]}
+              src={image}
               className="animate-rise aspect-square w-full"
               motifClassName={`transition-transform duration-500 ${VIEWS[view]}`}
             />
@@ -84,6 +87,7 @@ export default function ProductDetail({ product }: { product: Product }) {
               >
                 <ProductArt
                   category={product.categoryId}
+                  src={image}
                   className="aspect-square w-full"
                   motifClassName={m}
                 />

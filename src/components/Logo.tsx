@@ -15,7 +15,7 @@ export default function Logo({
       className={`focus-ring group inline-flex items-center gap-2.5 ${className}`}
     >
       <span
-        className="grid h-9 w-9 place-items-center rounded-full bg-terracotta text-[#1a1206] transition-colors duration-200 group-hover:bg-terracotta-dark"
+        className="grid h-9 w-9 place-items-center rounded-full bg-terracotta text-white transition-colors duration-200 group-hover:bg-terracotta-dark"
         aria-hidden="true"
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
