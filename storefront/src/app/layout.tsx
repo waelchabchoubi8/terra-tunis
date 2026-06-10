@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getShopProducts } from "@/lib/catalogue";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -28,11 +29,14 @@ export const metadata: Metadata = {
     "A curated marketplace of artisan Tunisian brands — cold-pressed olive oil, raw honey, heirloom spices and fine pastries. Sourced with care, shipped to Sweden.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch the catalogue once (Medusa, or mock fallback) and hand it to the
+  // client providers so every component reads from the same source.
+  const products = await getShopProducts();
   return (
     <html
       lang="en"
@@ -40,7 +44,7 @@ export default function RootLayout({
       className={`${outfit.variable} ${inter.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">
-        <Providers>
+        <Providers products={products}>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

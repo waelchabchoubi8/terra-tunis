@@ -7,7 +7,8 @@ import {
   useMemo,
   useReducer,
 } from "react";
-import { defaultVariant, getVariant, products } from "./data";
+import { defaultVariant, getVariant } from "./data";
+import { useCatalogue } from "./catalogue-context";
 
 export interface CartLine {
   productId: string;
@@ -93,6 +94,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { lines: [], ready: false });
+  const { getById } = useCatalogue();
 
   // Hydrate from localStorage on mount.
   useEffect(() => {
@@ -103,13 +105,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // valid variantId (its product's default) so lookups never miss.
       const lines = (Array.isArray(parsed) ? parsed : []).map((l) => {
         if (l.variantId) return l;
-        const p = products.find((pr) => pr.id === l.productId);
+        const p = getById(l.productId);
         return { ...l, variantId: p ? defaultVariant(p).id : "std" };
       });
       dispatch({ type: "hydrate", lines });
     } catch {
       dispatch({ type: "hydrate", lines: [] });
     }
+    // getById is stable for a given catalogue; hydrate runs once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Persist after hydration.
@@ -120,7 +124,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<CartContextValue>(() => {
     const count = state.lines.reduce((n, l) => n + l.qty, 0);
     const subtotalEUR = state.lines.reduce((sum, l) => {
-      const p = products.find((pr) => pr.id === l.productId);
+      const p = getById(l.productId);
       return sum + (p ? getVariant(p, l.variantId).priceEUR * l.qty : 0);
     }, 0);
 
@@ -130,7 +134,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       count,
       subtotalEUR,
       add: (productId, qty = 1, variantId) => {
-        const p = products.find((pr) => pr.id === productId);
+        const p = getById(productId);
         const vid = variantId ?? (p ? defaultVariant(p).id : "std");
         dispatch({ type: "add", productId, variantId: vid, qty });
       },
@@ -140,7 +144,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: "remove", productId, variantId }),
       clear: () => dispatch({ type: "clear" }),
     };
-  }, [state]);
+  }, [state, getById]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

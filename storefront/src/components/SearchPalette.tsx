@@ -6,10 +6,10 @@ import {
   brands,
   getBrand,
   getCategory,
-  products,
   type Brand,
   type Product,
 } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import { useSettings } from "@/lib/settings";
 import { useLockBody, useUI } from "@/lib/ui";
 import ProductArt from "./ProductArt";
@@ -44,6 +44,7 @@ export default function SearchPalette() {
 
 function PalettePanel({ onClose }: { onClose: () => void }) {
   const { t, locale } = useSettings();
+  const { products } = useCatalogue();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -89,7 +90,7 @@ function PalettePanel({ onClose }: { onClose: () => void }) {
       .slice(0, 3)
       .map((brand): Hit => ({ kind: "brand", brand }));
     return [...productHits, ...brandHits];
-  }, [q, locale]);
+  }, [q, locale, products]);
 
   // Reset the highlighted row when the query changes (adjust-during-render).
   const [prevQ, setPrevQ] = useState(q);

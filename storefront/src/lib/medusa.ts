@@ -7,7 +7,7 @@
 // Products are mapped into the same `Product` shape the components already use,
 // so the UI doesn't need to know where the data came from.
 
-import type { CategoryId, Product } from "./data";
+import type { CategoryId, Product, Variant } from "./data";
 
 const BACKEND = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL;
 const KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY;
@@ -47,7 +47,7 @@ type MedusaProduct = {
   description?: string;
   thumbnail?: string;
   images?: { url: string }[];
-  metadata?: { origin?: string } | null;
+  metadata?: { origin?: string; brand?: string } | null;
   categories?: { name: string }[];
   variants?: MedusaVariant[];
 };
@@ -84,8 +84,9 @@ async function eurRegionId(): Promise<string | undefined> {
 }
 
 function mapProduct(p: MedusaProduct): Product {
-  const variants = (p.variants ?? [])
+  const variants: Variant[] = (p.variants ?? [])
     .map((v) => ({
+      id: v.id, // Medusa variant id — stable key for cart lines & selector
       label: v.title,
       priceEUR: v.calculated_price?.calculated_amount ?? 0,
     }))
@@ -98,7 +99,7 @@ function mapProduct(p: MedusaProduct): Product {
     id: p.id,
     slug: p.handle,
     name: { en: p.title, sv: p.title },
-    brandId: "", // brands are not modelled in Medusa yet
+    brandId: p.metadata?.brand ?? "", // links to the storefront brand content
     categoryId: CATEGORY_BY_NAME[categoryName] ?? "olive-oil",
     priceEUR: cheapest?.priceEUR ?? 0,
     weight: cheapest?.label ?? "",
@@ -106,6 +107,7 @@ function mapProduct(p: MedusaProduct): Product {
     description: { en: p.description ?? "", sv: p.description ?? "" },
     stock: "in",
     featured: FEATURED.has(p.handle),
+    variants,
   };
 }
 

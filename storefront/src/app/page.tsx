@@ -3,7 +3,8 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { useSettings } from "@/lib/settings";
-import { brands, categories, featuredProducts, products } from "@/lib/data";
+import { brands, categories } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import SectionHeading from "@/components/SectionHeading";
 import CategoryCard from "@/components/CategoryCard";
 import ProductCard from "@/components/ProductCard";
@@ -23,7 +24,8 @@ import {
 
 export default function HomePage() {
   const { t, locale } = useSettings();
-  const featured = featuredProducts().slice(0, 4);
+  const { products } = useCatalogue();
+  const featured = products.filter((p) => p.featured).slice(0, 4);
   const heroBrand = brands[0];
   const heroRef = useRef<HTMLDivElement>(null);
 

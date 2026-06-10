@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { useSettings } from "@/lib/settings";
-import { getBrand, getVariant, products } from "@/lib/data";
+import { getBrand, getVariant } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import { shippingForSubtotal } from "@/lib/shipping";
 import ProductArt from "@/components/ProductArt";
 import Price from "@/components/Price";
@@ -23,6 +24,7 @@ import {
 export default function CartPage() {
   const { t, locale } = useSettings();
   const { lines, ready, subtotalEUR, setQty, remove } = useCart();
+  const { products, getById } = useCatalogue();
 
   if (!ready) {
     return (
@@ -71,7 +73,7 @@ export default function CartPage() {
         {/* Lines */}
         <ul className="divide-y divide-clay/70 border-y border-clay/70">
           {lines.map((line) => {
-            const product = products.find((p) => p.id === line.productId);
+            const product = getById(line.productId);
             if (!product) return null;
             const brand = getBrand(product.brandId);
             const variant = getVariant(product, line.variantId);

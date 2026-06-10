@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { useSettings } from "@/lib/settings";
 import { useLockBody, useUI } from "@/lib/ui";
-import { getBrand, getVariant, products } from "@/lib/data";
+import { getBrand, getVariant } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import { shippingForSubtotal } from "@/lib/shipping";
 import ProductArt from "./ProductArt";
 import Price from "./Price";
@@ -22,6 +23,7 @@ import {
 export default function CartDrawer() {
   const { cartOpen, closeCart } = useUI();
   const { lines, subtotalEUR, setQty, remove } = useCart();
+  const { getById } = useCatalogue();
   const { t, locale } = useSettings();
   const closeButton = useRef<HTMLButtonElement>(null);
 
@@ -101,7 +103,7 @@ export default function CartDrawer() {
             {/* Lines */}
             <ul className="flex-1 divide-y divide-clay/50 overflow-y-auto px-5">
               {lines.map((line) => {
-                const product = products.find((p) => p.id === line.productId);
+                const product = getById(line.productId);
                 if (!product) return null;
                 const brand = getBrand(product.brandId);
                 const variant = getVariant(product, line.variantId);

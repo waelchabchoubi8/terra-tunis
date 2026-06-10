@@ -10,9 +10,9 @@ import {
   productImage,
   productVariants,
   ratingFor,
-  relatedProducts,
   type Product,
 } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import { useSettings } from "@/lib/settings";
 import ProductArt from "./ProductArt";
 import Price from "./Price";
@@ -38,9 +38,14 @@ const VIEWS = ["", "-rotate-6 scale-90", "scale-125", "rotate-6 scale-95"];
 
 export default function ProductDetail({ product }: { product: Product }) {
   const { t, locale } = useSettings();
+  const { products: catalogue } = useCatalogue();
   const brand = getBrand(product.brandId);
   const category = getCategory(product.categoryId);
-  const related = relatedProducts(product, 4);
+  // Related: same category first, then anything else, excluding this product.
+  const related = [
+    ...catalogue.filter((p) => p.id !== product.id && p.categoryId === product.categoryId),
+    ...catalogue.filter((p) => p.id !== product.id && p.categoryId !== product.categoryId),
+  ].slice(0, 4);
   const rating = ratingFor(product);
   const image = productImage(product);
   const variants = productVariants(product);

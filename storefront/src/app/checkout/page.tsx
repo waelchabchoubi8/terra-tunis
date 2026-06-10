@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { useSettings } from "@/lib/settings";
-import { getVariant, products } from "@/lib/data";
+import { getVariant } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import { shippingForSubtotal } from "@/lib/shipping";
 import Price from "@/components/Price";
 import FreeShippingMeter from "@/components/FreeShippingMeter";
@@ -26,6 +27,7 @@ const PAYMENT_METHODS = [
 export default function CheckoutPage() {
   const { t, locale } = useSettings();
   const { lines, ready, subtotalEUR, clear } = useCart();
+  const { getById } = useCatalogue();
   const [payment, setPayment] = useState<string>("klarna");
   const [placed, setPlaced] = useState(false);
 
@@ -185,7 +187,7 @@ export default function CheckoutPage() {
 
             <ul className="mt-5 space-y-3">
               {lines.map((line) => {
-                const product = products.find((p) => p.id === line.productId);
+                const product = getById(line.productId);
                 if (!product) return null;
                 const variant = getVariant(product, line.variantId);
                 return (

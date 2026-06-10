@@ -42,6 +42,9 @@ export interface Product {
   description: Localized;
   stock: StockStatus;
   featured: boolean;
+  /** Size options. Present on Medusa-sourced products; mock products use the
+   *  VARIANTS map below (see productVariants()). */
+  variants?: Variant[];
 }
 
 /** A selectable size/option of a product (e.g. 250 ml / 500 ml / 1 L). */
@@ -613,6 +616,8 @@ const VARIANTS: Record<string, Variant[]> = {
 
 /** All selectable variants for a product (always at least one). */
 export function productVariants(product: Product): Variant[] {
+  // Medusa-sourced products carry their own variants.
+  if (product.variants && product.variants.length) return product.variants;
   return (
     VARIANTS[product.id] ?? [
       { id: "std", label: product.weight, priceEUR: product.priceEUR },

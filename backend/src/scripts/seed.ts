@@ -55,6 +55,27 @@ const CATEGORIES = [
   "Fine Pastries",
 ];
 
+// Brand entities live in the storefront (editorial content); products link to
+// them by id via product metadata so the storefront can group by brand.
+const BRAND_BY_SLUG: Record<string, string> = {
+  "chetoui-extra-virgin-500ml": "el-founti",
+  "chemlali-evoo-1l": "el-founti",
+  "early-harvest-evoo-250ml": "el-founti",
+  "organic-evoo-tin-750ml": "cap-bon",
+  "rosemary-honey-400g": "kroumirie",
+  "eucalyptus-honey-400g": "kroumirie",
+  "wild-thyme-honey-250g": "kroumirie",
+  "bee-pollen-120g": "kroumirie",
+  "traditional-harissa-200g": "dar-toumi",
+  "tabil-spice-blend-100g": "dar-toumi",
+  "ras-el-hanout-80g": "dar-toumi",
+  "rose-harissa-180g": "cap-bon",
+  "makroudh-date-pastries": "maison-zituna",
+  "baklawa-assortment": "maison-zituna",
+  "kaak-warka-almond-rings": "maison-zituna",
+  "ghraiba-sesame-shortbread": "maison-zituna",
+};
+
 const CATALOGUE: SeedProduct[] = [
   // ---- Olive Oil ----
   {
@@ -439,7 +460,7 @@ export default async function seedTerraTunis({
         category_ids: [catId(p.category)],
         shipping_profile_id: shippingProfile.id,
         images: [{ url: `/products/${p.slug}.jpg` }],
-        metadata: { origin: p.origin },
+        metadata: { origin: p.origin, brand: BRAND_BY_SLUG[p.slug] ?? "" },
         options: [{ title: "Size", values: p.variants.map((v) => v.label) }],
         variants: p.variants.map((v) => ({
           title: v.label,

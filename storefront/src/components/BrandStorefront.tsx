@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { brandCover, productsByBrand, type Brand } from "@/lib/data";
+import { brandCover, type Brand } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import { useSettings } from "@/lib/settings";
 import ProductCard from "./ProductCard";
 import SectionHeading from "./SectionHeading";
@@ -11,7 +12,8 @@ import { CategoryMotif, MapPinIcon, ArrowRight } from "./icons";
 
 export default function BrandStorefront({ brand }: { brand: Brand }) {
   const { t, locale } = useSettings();
-  const items = productsByBrand(brand.id);
+  const { products } = useCatalogue();
+  const items = products.filter((p) => p.brandId === brand.id);
   const monogram = brand.name
     .split(" ")
     .filter((w) => !["de", "les", "el"].includes(w.toLowerCase()))

@@ -17,3 +17,11 @@ export async function getShopProducts(): Promise<Product[]> {
     return mockProducts;
   }
 }
+
+/** A single product by slug/handle, from the same source as the catalogue. */
+export async function getCatalogueProductBySlug(
+  slug: string,
+): Promise<Product | undefined> {
+  const all = await getShopProducts();
+  return all.find((p) => p.slug === slug);
+}

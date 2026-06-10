@@ -56,13 +56,25 @@ data and logic, and a Next.js storefront renders it.
 | Area | Status |
 |------|--------|
 | Medusa backend on local Postgres | ✅ |
-| Catalogue seed (categories, products, variants) | ✅ |
-| Storefront reads catalogue from Medusa | 🔧 in progress (env-gated, mock fallback) |
-| Brands as a first-class entity in Medusa | ⏳ planned (custom module; mock for now) |
-| Cart/checkout via Medusa | ⏳ planned |
+| Catalogue seed (categories, products, variants, brand metadata) | ✅ |
+| Storefront reads catalogue from Medusa — home, shop, product detail, brands, search | ✅ (via the catalogue context; mock fallback) |
+| Brands (content in storefront, linked to products via Medusa metadata) | ✅ |
+| Cart resolves products via the catalogue context | ✅ (cart state still localStorage) |
+| Cart/checkout persisted as Medusa carts/orders | ⏳ planned |
 | Google auth | ⏳ planned |
 | Stripe payments + coupons | ⏳ planned |
 | Multi-vendor commission (Stripe Connect) | ⏳ later |
+
+### How the storefront reads data
+
+The root layout (`storefront/src/app/layout.tsx`) fetches the catalogue once on
+the server via `getShopProducts()` and passes it to a client `CatalogueProvider`
+(`src/lib/catalogue-context.tsx`). Every client component — home featured rail,
+shop filters, product detail (incl. variants), brand pages, search, and the cart
+line lookups — reads from `useCatalogue()`, so there is a single source of truth
+and the cart can resolve any product the catalogue knows about. Categories and
+brand *content* (stories, accents) remain editorial data in `data.ts`; products
+link to brands by id through Medusa product metadata.
 
 ## Roadmap
 

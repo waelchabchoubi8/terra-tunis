@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { brandCover, productsByBrand, type Brand } from "@/lib/data";
+import { brandCover, type Brand } from "@/lib/data";
+import { useCatalogue } from "@/lib/catalogue-context";
 import { useSettings } from "@/lib/settings";
 import { ArrowRight, MapPinIcon } from "./icons";
 
 export default function BrandCard({ brand }: { brand: Brand }) {
   const { locale, t } = useSettings();
-  const count = productsByBrand(brand.id).length;
+  const { products } = useCatalogue();
+  const count = products.filter((p) => p.brandId === brand.id).length;
   const cover = brandCover(brand);
   const monogram = brand.name
     .split(" ")
