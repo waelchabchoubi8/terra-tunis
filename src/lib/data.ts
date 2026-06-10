@@ -44,6 +44,14 @@ export interface Product {
   featured: boolean;
 }
 
+/** A selectable size/option of a product (e.g. 250 ml / 500 ml / 1 L). */
+export interface Variant {
+  id: string; // unique within the product
+  label: string; // size — locale-neutral (ml / g / L / kg)
+  priceEUR: number;
+  stock?: StockStatus; // defaults to the product's stock
+}
+
 export const categories: Category[] = [
   {
     id: "olive-oil",
@@ -519,6 +527,109 @@ const BRAND_COVERS = new Set<string>([
 /** Public path to a brand's cover scene, or undefined if it has none. */
 export function brandCover(brand: Brand): string | undefined {
   return BRAND_COVERS.has(brand.slug) ? `/brands/${brand.slug}.jpg` : undefined;
+}
+
+// ---- Variants (size options) ----
+// Keyed by product id. The entry whose label matches the product's `weight`
+// is the default and carries the product's base `priceEUR`. Products not
+// listed here expose a single "standard" variant derived from their weight.
+const VARIANTS: Record<string, Variant[]> = {
+  // Olive oil
+  "p-chetoui-500": [
+    { id: "250ml", label: "250 ml", priceEUR: 9 },
+    { id: "500ml", label: "500 ml", priceEUR: 16 },
+    { id: "1l", label: "1 L", priceEUR: 28 },
+  ],
+  "p-chemlali-1l": [
+    { id: "500ml", label: "500 ml", priceEUR: 13 },
+    { id: "1l", label: "1 L", priceEUR: 22 },
+    { id: "3l", label: "3 L", priceEUR: 58 },
+  ],
+  "p-early-harvest-250": [
+    { id: "250ml", label: "250 ml", priceEUR: 19 },
+    { id: "500ml", label: "500 ml", priceEUR: 34 },
+  ],
+  "p-organic-tin-750": [
+    { id: "500ml", label: "500 ml", priceEUR: 19 },
+    { id: "750ml", label: "750 ml", priceEUR: 26 },
+    { id: "3l", label: "3 L tin", priceEUR: 89 },
+  ],
+  // Honey
+  "p-rosemary-400": [
+    { id: "250g", label: "250 g", priceEUR: 9 },
+    { id: "400g", label: "400 g", priceEUR: 13 },
+    { id: "700g", label: "700 g", priceEUR: 21 },
+  ],
+  "p-eucalyptus-400": [
+    { id: "250g", label: "250 g", priceEUR: 9 },
+    { id: "400g", label: "400 g", priceEUR: 13 },
+  ],
+  "p-thyme-250": [
+    { id: "250g", label: "250 g", priceEUR: 15 },
+    { id: "500g", label: "500 g", priceEUR: 28 },
+  ],
+  "p-bee-pollen-120": [
+    { id: "120g", label: "120 g", priceEUR: 11 },
+    { id: "250g", label: "250 g", priceEUR: 20 },
+  ],
+  // Spices
+  "p-harissa-trad-200": [
+    { id: "100g", label: "100 g", priceEUR: 6 },
+    { id: "200g", label: "200 g", priceEUR: 9 },
+    { id: "400g", label: "400 g", priceEUR: 16 },
+  ],
+  "p-tabil-100": [
+    { id: "100g", label: "100 g", priceEUR: 8 },
+    { id: "250g", label: "250 g", priceEUR: 17 },
+  ],
+  "p-ras-el-hanout-80": [
+    { id: "80g", label: "80 g", priceEUR: 10 },
+    { id: "200g", label: "200 g", priceEUR: 22 },
+  ],
+  "p-harissa-cap-bon-180": [
+    { id: "180g", label: "180 g", priceEUR: 11 },
+    { id: "350g", label: "350 g", priceEUR: 20 },
+  ],
+  // Pastries
+  "p-makroudh-box": [
+    { id: "250g", label: "250 g", priceEUR: 10 },
+    { id: "500g", label: "500 g", priceEUR: 18 },
+    { id: "1kg", label: "1 kg", priceEUR: 33 },
+  ],
+  "p-baklawa-assortment": [
+    { id: "300g", label: "300 g", priceEUR: 13 },
+    { id: "600g", label: "600 g", priceEUR: 24 },
+    { id: "1.2kg", label: "1.2 kg", priceEUR: 45 },
+  ],
+  "p-kaak-warka": [
+    { id: "200g", label: "200 g", priceEUR: 12 },
+    { id: "400g", label: "400 g", priceEUR: 22 },
+  ],
+  "p-ghraiba-sesame": [
+    { id: "350g", label: "350 g", priceEUR: 14 },
+    { id: "700g", label: "700 g", priceEUR: 26 },
+  ],
+};
+
+/** All selectable variants for a product (always at least one). */
+export function productVariants(product: Product): Variant[] {
+  return (
+    VARIANTS[product.id] ?? [
+      { id: "std", label: product.weight, priceEUR: product.priceEUR },
+    ]
+  );
+}
+
+/** The variant selected by default (matches the product's base weight/price). */
+export function defaultVariant(product: Product): Variant {
+  const vs = productVariants(product);
+  return vs.find((v) => v.label === product.weight) ?? vs[0];
+}
+
+/** Resolve a variant by id, falling back to the default. */
+export function getVariant(product: Product, variantId?: string): Variant {
+  const vs = productVariants(product);
+  return vs.find((v) => v.id === variantId) ?? defaultVariant(product);
 }
 
 // ---- Lookups & helpers ----

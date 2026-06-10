@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { useSettings } from "@/lib/settings";
 import { useLockBody, useUI } from "@/lib/ui";
-import { getBrand, products } from "@/lib/data";
+import { getBrand, getVariant, products } from "@/lib/data";
 import { shippingForSubtotal } from "@/lib/shipping";
 import ProductArt from "./ProductArt";
 import Price from "./Price";
@@ -104,8 +104,9 @@ export default function CartDrawer() {
                 const product = products.find((p) => p.id === line.productId);
                 if (!product) return null;
                 const brand = getBrand(product.brandId);
+                const variant = getVariant(product, line.variantId);
                 return (
-                  <li key={line.productId} className="flex gap-3.5 py-4">
+                  <li key={`${line.productId}:${line.variantId}`} className="flex gap-3.5 py-4">
                     <Link
                       href={`/product/${product.slug}`}
                       onClick={closeCart}
@@ -129,13 +130,13 @@ export default function CartDrawer() {
                           </Link>
                           {brand && (
                             <p className="mt-0.5 truncate text-xs text-stone">
-                              {brand.name} · {product.weight}
+                              {brand.name} · {variant.label}
                             </p>
                           )}
                         </div>
                         <button
                           type="button"
-                          onClick={() => remove(line.productId)}
+                          onClick={() => remove(line.productId, line.variantId)}
                           aria-label={t("cart.remove")}
                           className="focus-ring grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-full text-stone transition-colors hover:bg-sand hover:text-tunis"
                         >
@@ -146,7 +147,7 @@ export default function CartDrawer() {
                         <div className="inline-flex items-center rounded-full border border-clay bg-parchment">
                           <button
                             type="button"
-                            onClick={() => setQty(line.productId, line.qty - 1)}
+                            onClick={() => setQty(line.productId, line.variantId, line.qty - 1)}
                             aria-label="Decrease quantity"
                             className="focus-ring grid h-8 w-8 cursor-pointer place-items-center rounded-full transition-colors hover:bg-sand"
                           >
@@ -157,7 +158,7 @@ export default function CartDrawer() {
                           </span>
                           <button
                             type="button"
-                            onClick={() => setQty(line.productId, line.qty + 1)}
+                            onClick={() => setQty(line.productId, line.variantId, line.qty + 1)}
                             aria-label="Increase quantity"
                             className="focus-ring grid h-8 w-8 cursor-pointer place-items-center rounded-full transition-colors hover:bg-sand"
                           >
@@ -165,7 +166,7 @@ export default function CartDrawer() {
                           </button>
                         </div>
                         <Price
-                          eur={product.priceEUR * line.qty}
+                          eur={variant.priceEUR * line.qty}
                           className="font-display text-base font-semibold"
                         />
                       </div>

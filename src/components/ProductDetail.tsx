@@ -3,9 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
+  defaultVariant,
   getBrand,
   getCategory,
+  getVariant,
   productImage,
+  productVariants,
   ratingFor,
   relatedProducts,
   type Product,
@@ -40,8 +43,12 @@ export default function ProductDetail({ product }: { product: Product }) {
   const related = relatedProducts(product, 4);
   const rating = ratingFor(product);
   const image = productImage(product);
+  const variants = productVariants(product);
   const [qty, setQty] = useState(1);
   const [view, setView] = useState(0);
+  const [variantId, setVariantId] = useState(defaultVariant(product).id);
+  const variant = getVariant(product, variantId);
+  const stock = variant.stock ?? product.stock;
 
   return (
     <div className="container-pad py-8 sm:py-12">
@@ -100,7 +107,7 @@ export default function ProductDetail({ product }: { product: Product }) {
         <div className="lg:sticky lg:top-32 lg:self-start">
           <div className="flex flex-wrap items-center gap-3">
             <p className="eyebrow text-terracotta">{category?.name[locale]}</p>
-            <StockBadge stock={product.stock} />
+            <StockBadge stock={stock} />
           </div>
 
           <h1 className="mt-3 font-display text-4xl leading-tight sm:text-5xl">
@@ -128,7 +135,7 @@ export default function ProductDetail({ product }: { product: Product }) {
 
           <div className="mt-5">
             <Price
-              eur={product.priceEUR}
+              eur={variant.priceEUR}
               showAlt
               className="font-display text-4xl font-semibold text-espresso"
             />
@@ -137,6 +144,39 @@ export default function ProductDetail({ product }: { product: Product }) {
           <p className="mt-5 max-w-prose leading-relaxed text-mocha">
             {product.description[locale]}
           </p>
+
+          {/* Size / variant selector */}
+          {variants.length > 1 && (
+            <div className="mt-7">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-espresso">
+                  {locale === "sv" ? "Storlek" : "Size"}
+                </p>
+                <p className="text-sm text-stone">{variant.label}</p>
+              </div>
+              <div className="mt-2.5 flex flex-wrap gap-2.5" role="group" aria-label={locale === "sv" ? "Välj storlek" : "Choose size"}>
+                {variants.map((v) => {
+                  const active = v.id === variantId;
+                  return (
+                    <button
+                      key={v.id}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setVariantId(v.id)}
+                      className={`focus-ring cursor-pointer rounded-xl border px-4 py-2.5 text-left transition-colors ${
+                        active
+                          ? "border-terracotta bg-terracotta/5"
+                          : "border-clay bg-parchment hover:border-terracotta/40"
+                      }`}
+                    >
+                      <span className="block text-sm font-semibold text-espresso">{v.label}</span>
+                      <Price eur={v.priceEUR} className="mt-0.5 block text-xs text-mocha" />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Quantity + add */}
           <div className="mt-7 flex flex-wrap items-center gap-4">
@@ -162,8 +202,9 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
             <AddToCartButton
               productId={product.id}
-              stock={product.stock}
+              stock={stock}
               qty={qty}
+              variantId={variantId}
               className="flex-1 sm:flex-none"
             />
           </div>
@@ -193,7 +234,7 @@ export default function ProductDetail({ product }: { product: Product }) {
           {/* Details */}
           <dl className="mt-6 divide-y divide-clay/70 border-t border-clay/70 text-sm">
             <Detail label={t("product.origin")} value={product.origin[locale]} />
-            <Detail label={t("product.weight")} value={product.weight} />
+            <Detail label={t("product.weight")} value={variant.label} />
             <Detail label={t("product.brand")} value={brand?.name ?? "—"} />
             <Detail label={t("product.category")} value={category?.name[locale] ?? "—"} />
           </dl>

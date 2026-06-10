@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { useSettings } from "@/lib/settings";
-import { products } from "@/lib/data";
+import { getVariant, products } from "@/lib/data";
 import { shippingForSubtotal } from "@/lib/shipping";
 import Price from "@/components/Price";
 import FreeShippingMeter from "@/components/FreeShippingMeter";
@@ -187,12 +187,16 @@ export default function CheckoutPage() {
               {lines.map((line) => {
                 const product = products.find((p) => p.id === line.productId);
                 if (!product) return null;
+                const variant = getVariant(product, line.variantId);
                 return (
-                  <li key={line.productId} className="flex justify-between gap-3 text-sm">
+                  <li key={`${line.productId}:${line.variantId}`} className="flex justify-between gap-3 text-sm">
                     <span className="text-mocha">
-                      {product.name[locale]} <span className="text-stone">× {line.qty}</span>
+                      {product.name[locale]}{" "}
+                      <span className="text-stone">
+                        ({variant.label}) × {line.qty}
+                      </span>
                     </span>
-                    <Price eur={product.priceEUR * line.qty} className="shrink-0 font-semibold" />
+                    <Price eur={variant.priceEUR * line.qty} className="shrink-0 font-semibold" />
                   </li>
                 );
               })}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { useSettings } from "@/lib/settings";
-import { getBrand, products } from "@/lib/data";
+import { getBrand, getVariant, products } from "@/lib/data";
 import { shippingForSubtotal } from "@/lib/shipping";
 import ProductArt from "@/components/ProductArt";
 import Price from "@/components/Price";
@@ -74,9 +74,10 @@ export default function CartPage() {
             const product = products.find((p) => p.id === line.productId);
             if (!product) return null;
             const brand = getBrand(product.brandId);
+            const variant = getVariant(product, line.variantId);
             return (
               <li
-                key={line.productId}
+                key={`${line.productId}:${line.variantId}`}
                 className="flex gap-4 rounded-xl px-2 py-5 transition-colors hover:bg-sand/40"
               >
                 <Link
@@ -104,11 +105,11 @@ export default function CartPage() {
                           {t("cart.soldBy")} {brand.name}
                         </p>
                       )}
-                      <p className="mt-0.5 text-sm text-stone">{product.weight}</p>
+                      <p className="mt-0.5 text-sm text-stone">{variant.label}</p>
                     </div>
                     <button
                       type="button"
-                      onClick={() => remove(line.productId)}
+                      onClick={() => remove(line.productId, line.variantId)}
                       aria-label={t("cart.remove")}
                       className="focus-ring grid h-9 w-9 cursor-pointer place-items-center rounded-full text-stone transition-colors hover:bg-sand hover:text-tunis"
                     >
@@ -120,7 +121,7 @@ export default function CartPage() {
                     <div className="inline-flex items-center rounded-full border border-clay bg-parchment">
                       <button
                         type="button"
-                        onClick={() => setQty(line.productId, line.qty - 1)}
+                        onClick={() => setQty(line.productId, line.variantId, line.qty - 1)}
                         aria-label="Decrease quantity"
                         className="focus-ring grid h-9 w-9 cursor-pointer place-items-center rounded-full transition-colors hover:bg-sand"
                       >
@@ -131,7 +132,7 @@ export default function CartPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => setQty(line.productId, line.qty + 1)}
+                        onClick={() => setQty(line.productId, line.variantId, line.qty + 1)}
                         aria-label="Increase quantity"
                         className="focus-ring grid h-9 w-9 cursor-pointer place-items-center rounded-full transition-colors hover:bg-sand"
                       >
@@ -139,7 +140,7 @@ export default function CartPage() {
                       </button>
                     </div>
                     <Price
-                      eur={product.priceEUR * line.qty}
+                      eur={variant.priceEUR * line.qty}
                       className="font-display text-xl font-semibold"
                     />
                   </div>

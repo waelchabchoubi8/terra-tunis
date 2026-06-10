@@ -12,12 +12,15 @@ export default function AddToCartButton({
   stock,
   qty = 1,
   variant = "full",
+  variantId,
   className = "",
 }: {
   productId: string;
   stock: StockStatus;
   qty?: number;
   variant?: "full" | "compact";
+  /** Selected size/option to add; omitted = product's default variant. */
+  variantId?: string;
   className?: string;
 }) {
   const { add } = useCart();
@@ -35,7 +38,7 @@ export default function AddToCartButton({
   function handleClick(e: React.MouseEvent) {
     e.preventDefault();
     if (soldOut) return;
-    add(productId, qty);
+    add(productId, qty, variantId);
     setAdded(true);
     if (timer.current) clearTimeout(timer.current);
     // Show the inline "added" tick briefly, then slide the mini cart open.

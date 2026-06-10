@@ -7,10 +7,11 @@ import {
   useMemo,
   useReducer,
 } from "react";
-import { products } from "./data";
+import { defaultVariant, getVariant, products } from "./data";
 
 export interface CartLine {
   productId: string;
+  variantId: string;
   qty: number;
 }
 
@@ -18,32 +19,47 @@ type CartState = { lines: CartLine[]; ready: boolean };
 
 type Action =
   | { type: "hydrate"; lines: CartLine[] }
-  | { type: "add"; productId: string; qty: number }
-  | { type: "setQty"; productId: string; qty: number }
-  | { type: "remove"; productId: string }
+  | { type: "add"; productId: string; variantId: string; qty: number }
+  | { type: "setQty"; productId: string; variantId: string; qty: number }
+  | { type: "remove"; productId: string; variantId: string }
   | { type: "clear" };
 
 const LS_KEY = "tt.cart";
+
+/** A line is identified by its product *and* variant. */
+const sameLine = (l: CartLine, productId: string, variantId: string) =>
+  l.productId === productId && l.variantId === variantId;
 
 function reducer(state: CartState, action: Action): CartState {
   switch (action.type) {
     case "hydrate":
       return { lines: action.lines, ready: true };
     case "add": {
-      const existing = state.lines.find((l) => l.productId === action.productId);
+      const existing = state.lines.find((l) =>
+        sameLine(l, action.productId, action.variantId),
+      );
       const lines = existing
         ? state.lines.map((l) =>
-            l.productId === action.productId
+            sameLine(l, action.productId, action.variantId)
               ? { ...l, qty: l.qty + action.qty }
               : l,
           )
-        : [...state.lines, { productId: action.productId, qty: action.qty }];
+        : [
+            ...state.lines,
+            {
+              productId: action.productId,
+              variantId: action.variantId,
+              qty: action.qty,
+            },
+          ];
       return { ...state, lines };
     }
     case "setQty": {
       const lines = state.lines
         .map((l) =>
-          l.productId === action.productId ? { ...l, qty: action.qty } : l,
+          sameLine(l, action.productId, action.variantId)
+            ? { ...l, qty: action.qty }
+            : l,
         )
         .filter((l) => l.qty > 0);
       return { ...state, lines };
@@ -51,7 +67,9 @@ function reducer(state: CartState, action: Action): CartState {
     case "remove":
       return {
         ...state,
-        lines: state.lines.filter((l) => l.productId !== action.productId),
+        lines: state.lines.filter(
+          (l) => !sameLine(l, action.productId, action.variantId),
+        ),
       };
     case "clear":
       return { ...state, lines: [] };
@@ -65,9 +83,9 @@ type CartContextValue = {
   ready: boolean;
   count: number;
   subtotalEUR: number;
-  add: (productId: string, qty?: number) => void;
-  setQty: (productId: string, qty: number) => void;
-  remove: (productId: string) => void;
+  add: (productId: string, qty?: number, variantId?: string) => void;
+  setQty: (productId: string, variantId: string, qty: number) => void;
+  remove: (productId: string, variantId: string) => void;
   clear: () => void;
 };
 
@@ -80,8 +98,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(LS_KEY);
-      const lines: CartLine[] = raw ? JSON.parse(raw) : [];
-      dispatch({ type: "hydrate", lines: Array.isArray(lines) ? lines : [] });
+      const parsed: CartLine[] = raw ? JSON.parse(raw) : [];
+      // Normalise older carts saved before variants existed: give each line a
+      // valid variantId (its product's default) so lookups never miss.
+      const lines = (Array.isArray(parsed) ? parsed : []).map((l) => {
+        if (l.variantId) return l;
+        const p = products.find((pr) => pr.id === l.productId);
+        return { ...l, variantId: p ? defaultVariant(p).id : "std" };
+      });
+      dispatch({ type: "hydrate", lines });
     } catch {
       dispatch({ type: "hydrate", lines: [] });
     }
@@ -96,7 +121,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const count = state.lines.reduce((n, l) => n + l.qty, 0);
     const subtotalEUR = state.lines.reduce((sum, l) => {
       const p = products.find((pr) => pr.id === l.productId);
-      return sum + (p ? p.priceEUR * l.qty : 0);
+      return sum + (p ? getVariant(p, l.variantId).priceEUR * l.qty : 0);
     }, 0);
 
     return {
@@ -104,9 +129,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       ready: state.ready,
       count,
       subtotalEUR,
-      add: (productId, qty = 1) => dispatch({ type: "add", productId, qty }),
-      setQty: (productId, qty) => dispatch({ type: "setQty", productId, qty }),
-      remove: (productId) => dispatch({ type: "remove", productId }),
+      add: (productId, qty = 1, variantId) => {
+        const p = products.find((pr) => pr.id === productId);
+        const vid = variantId ?? (p ? defaultVariant(p).id : "std");
+        dispatch({ type: "add", productId, variantId: vid, qty });
+      },
+      setQty: (productId, variantId, qty) =>
+        dispatch({ type: "setQty", productId, variantId, qty }),
+      remove: (productId, variantId) =>
+        dispatch({ type: "remove", productId, variantId }),
       clear: () => dispatch({ type: "clear" }),
     };
   }, [state]);
