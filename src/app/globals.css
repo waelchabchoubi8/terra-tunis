@@ -1,26 +1,378 @@
 @import "tailwindcss";
 
+/*
+  Terra Tunis — Design System v2 (Dark / Premium / Liquid Glass)
+  Style: Sleek modern dark. Charcoal surfaces, gold accent, glass panels,
+  glossy cards, slow aurora light and grain for a tactile premium feel.
+  Type: Outfit (geometric display) + Inter (body).
+  NOTE: token names are kept from the original light theme but remapped to
+  dark values, so `bg-cream` = app background, `text-espresso` = primary text, etc.
+*/
+
+@theme {
+  /* Surfaces (dark) */
+  --color-cream: #0e0e11; /* app background */
+  --color-sand: #16161b; /* subtle elevated surface */
+  --color-clay: #2a2a33; /* borders / dividers */
+  --color-parchment: #17171c; /* card surface */
+
+  /* Accents */
+  --color-terracotta: #cca24f; /* PRIMARY accent = gold */
+  --color-terracotta-dark: #e2c074; /* hover = brighter gold */
+  --color-olive: #a3b466;
+  --color-olive-dark: #8b9c52;
+  --color-tunis: #d65f4b; /* warm coral-red */
+  --color-tunis-dark: #b6432f;
+  --color-gold: #d4af6a;
+  --color-gold-soft: #ecd6a6;
+
+  /* Ink (light on dark) */
+  --color-espresso: #f3f0e8; /* primary text */
+  --color-mocha: #aca69b; /* muted text */
+  --color-stone: #7e7870; /* faint text */
+
+  /* Fonts (wired to next/font CSS variables in layout) */
+  --font-display: var(--font-outfit), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Radii & shadows */
+  --radius-card: 16px;
+  --shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 30px -14px rgba(0, 0, 0, 0.85);
+  --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 28px 64px -22px rgba(0, 0, 0, 0.95);
+  --shadow-glow: 0 0 0 1px rgba(204, 162, 79, 0.35),
+    0 18px 50px -18px rgba(204, 162, 79, 0.35);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-cream);
+  --foreground: var(--color-espresso);
+  color-scheme: dark;
+  /* z-index scale: 10 floating chips · 20 sticky asides · 40 header · 50 overlays */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  border-color: var(--color-clay);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(65% 55% at 50% -12%, rgba(204, 162, 79, 0.12), transparent 70%),
+    radial-gradient(45% 45% at 92% 6%, rgba(214, 95, 75, 0.07), transparent 70%),
+    var(--color-cream);
+  background-attachment: fixed;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Film grain over everything — keeps large dark surfaces from banding */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: rgba(204, 162, 79, 0.3);
+  color: var(--color-espresso);
+}
+
+/* Thin, dark, gold-tinted scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #34343e transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2c2c35;
+  border-radius: 999px;
+  border: 2px solid var(--color-cream);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(204, 162, 79, 0.45);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Display headings default to the geometric sans */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+/* Utilities */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-sans); }
+
+.eyebrow {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.container-pad {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem; /* 1280px */
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .container-pad { padding-inline: 2rem; }
+}
+
+/* Focus ring used across interactive elements */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Glossy card sheen — subtle gradient overlay for elevated surfaces */
+.glossy {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 40%);
+}
+
+/* Liquid-glass panel — drawers, palettes, floating chips */
+.glass {
+  background: rgba(20, 20, 25, 0.78);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 60px -24px rgba(0, 0, 0, 0.9);
+}
+
+/* Gold gradient ink for display accents */
+.text-gradient-gold {
+  background: linear-gradient(100deg, #ecd6a6 0%, #cca24f 45%, #e2c074 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle entrance */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-rise { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Page transition (used by app/template.tsx) */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Scroll reveal (driven by the <Reveal> component) */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-shown {
+  opacity: 1;
+  transform: none;
+}
+
+/* Slow vertical float for hero tiles */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: float-y 7s ease-in-out infinite; }
+
+/* Soft pulsing glow for accents */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.animate-pulse-glow { animation: pulse-glow 2.6s ease-in-out infinite; }
+
+/* Cart badge pop */
+@keyframes badge-pop {
+  0% { transform: scale(0.4); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.animate-badge-pop { animation: badge-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Overlay fade + panel slide (cart drawer / search palette) */
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.overlay-in { animation: overlay-in 0.25s ease both; }
+
+@keyframes drawer-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.drawer-in { animation: drawer-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes palette-in {
+  from { opacity: 0; transform: translateY(-14px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.palette-in { animation: palette-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Marquee — infinite brand strip. Track holds two copies of the content. */
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 36s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Skeleton shimmer for loading states */
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #1a1a20 25%, #232330 50%, #1a1a20 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: var(--radius-card);
+}
+
+/* Animated dashed route — the provenance band signature */
+.route-dash {
+  stroke-dasharray: 6 7;
+  animation: route-dash 1.6s linear infinite;
+}
+@keyframes route-dash {
+  to { stroke-dashoffset: -13; }
+}
+
+/* Card lift on hover without layout shift */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+@media (hover: hover) {
+  .hover-lift:hover { transform: translateY(-4px); }
+}
+
+/* Sheen sweep across card artwork on hover */
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: -20% auto -20% -60%;
+  width: 45%;
+  transform: skewX(-18deg) translateX(0);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .sheen:hover::after {
+    opacity: 1;
+    animation: sheen-sweep 0.9s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+}
+@keyframes sheen-sweep {
+  from { transform: skewX(-18deg) translateX(0); }
+  to { transform: skewX(-18deg) translateX(380%); }
+}
+
+/* Horizontal scroll-snap row (related products on small screens) */
+.scroll-row {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar { display: none; }
+.scroll-row > * {
+  scroll-snap-align: start;
+  flex: 0 0 min(72vw, 17rem);
+}
+
+/* Styled <select> with custom gold chevron */
+.select-fancy {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cca24f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.4rem;
+}
+
+/* Thin decorative rule */
+.hairline {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-clay), transparent);
+}
+
+/* Ornamental section divider — gold hairline with a diamond */
+.divider-ornate {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(204, 162, 79, 0.4), transparent);
+}
+.divider-ornate::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--color-terracotta);
+  box-shadow: 0 0 12px rgba(204, 162, 79, 0.8);
+}
+
+/* Native form controls adopt dark scheme */
+input, textarea, select {
+  color-scheme: dark;
 }
